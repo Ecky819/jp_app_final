@@ -1,6 +1,6 @@
 name: jp_app_final
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -17,3 +17,18 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/burger.png
+    - assets/images/cupcake_chick.png
+    - assets/images/cupcake_cat.png
+    - assets/images/icecream_cone.png
+    - assets/images/icecream_stick.png
+    - assets/images/icecream.png
+    - assets/images/star.png
+
+    - assets/backgrounds/bg_mainscreen.png
+    - assets/backgrounds/bg_startscreen.png
+
+    - assets/details/cut_card.png
+    - assets/details/snack_snack.png

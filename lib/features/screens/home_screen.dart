@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter_inset_box_shadow_update/flutter_inset_box_shadow_update.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,33 +13,53 @@ class HomeScreen extends StatelessWidget {
   }) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          // 30% Weiß = 0x4DFFFFFF, 15% Weiß = 0x26FFFFFF
-          color: selected ? const Color(0x4DFFFFFF) : const Color(0x26FFFFFF),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            // 50% Weiß = 0x80FFFFFF, 30% Weiß = 0x4DFFFFFF
-            color: selected ? const Color(0x80FFFFFF) : const Color(0x4DFFFFFF),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            if (withIcon) ...[
-              const Icon(Icons.grid_view, size: 16, color: Colors.white70),
-              const SizedBox(width: 4),
-            ],
-            Text(
-              label,
-              style: GoogleFonts.roboto(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 25, sigmaY: 0),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            decoration: BoxDecoration(
+              color: selected
+                  ? const Color(0x9DFFFFFF)
+                  : const Color(0x20FFFFFF),
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(
+                color: selected
+                    ? const Color(0x80FFFFFF)
+                    : const Color(0x60FFFFFF),
+                width: 1,
               ),
             ),
-          ],
+            child: Row(
+              children: [
+                if (withIcon) ...[
+                  Image.asset(
+                    'assets/icons/lunch.png',
+                    width: 16,
+                    height: 16,
+                    color: Colors.white54,
+                  ),
+                  const SizedBox(width: 4),
+                ],
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontFamily: "SF Pro Display Semibold",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: selected
+                        ? Colors.black
+                        : Color.fromRGBO(235, 235, 245, 0.6),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                if (withIcon) ...[
+                  Icon(Icons.expand_more, size: 20, color: Colors.white54),
+                ],
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -63,10 +85,8 @@ class HomeScreen extends StatelessWidget {
           colors: [Color(0x00FFFFFF), Color(0xFF908CF5), Color(0xFF8C5BEA)],
         ),
         borderRadius: BorderRadius.circular(24),
-        // 50% Weiß = 0x80FFFFFF
         border: Border.all(color: const Color(0x80FFFFFF), width: 1),
         boxShadow: const [
-          // 10% Weiß = 0x1AFFFFFF
           BoxShadow(
             color: Color(0x1AFFFFFF),
             blurRadius: 24,
@@ -80,8 +100,8 @@ class HomeScreen extends StatelessWidget {
           Center(
             child: Image.asset(
               assetImage,
-              width: 120,
-              height: 120,
+              width: 160,
+              height: 160,
               fit: BoxFit.contain,
             ),
           ),
@@ -105,6 +125,7 @@ class HomeScreen extends StatelessWidget {
           const Spacer(),
           Row(
             children: [
+              Image.asset('assets/icons/currency.png', width: 12, height: 12),
               Text(
                 price,
                 style: GoogleFonts.inter(
@@ -140,190 +161,241 @@ class HomeScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/hintergründe/bg_mainscreen.png',
+              'assets/backgrounds/bg_mainscreen.png',
               fit: BoxFit.cover,
             ),
           ),
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Choose Your\nFavorite Snack',
-                    style: GoogleFonts.inter(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
+          Positioned.fill(
+            child: Container(
+              color: Colors.transparent, // optional overlay
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
                   ),
-                  const SizedBox(height: 16),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        _buildCategoryChip(
-                          'All categories',
-                          false,
-                          withIcon: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Choose Your Favorite Snack',
+                        style: GoogleFonts.inter(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
                         ),
-                        _buildCategoryChip('Salty', true),
-                        _buildCategoryChip('Sweet', false),
-                        _buildCategoryChip('Fruity', false),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Center(
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Image.asset(
-                          'assets/details/cut_card.png',
-                          width: size.width * 0.88,
+                      ),
+                      const SizedBox(height: 24),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _buildCategoryChip(
+                              'All categories',
+                              false,
+                              withIcon: true,
+                            ),
+                            _buildCategoryChip('Salty', true),
+                            _buildCategoryChip('Sweet', false),
+                            _buildCategoryChip('Fruity', false),
+                          ],
                         ),
-                        Positioned(
-                          top: 36,
-                          left: 28,
-                          child: SizedBox(
-                            width: size.width * 0.45,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Angi’s Yummy Burger',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
+                      ),
+                      const SizedBox(height: 24),
+                      Center(
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Image.asset(
+                              'assets/details/cut_card_shiny.png',
+                              width: size.width * 0.88,
+                            ),
+                            Positioned(
+                              top: 16,
+                              left: 28,
+                              child: SizedBox(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Angi’s Yummy Burger',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Delish vegan burger\nthat tastes like heaven',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/icons/currency.png',
+                                          width: 20,
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          ' 13.99',
+                                          style: GoogleFonts.inter(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Delish vegan burger\nthat tastes like heaven',
+                              ),
+                            ),
+                            Positioned(
+                              top: 20,
+                              right: 20,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/star.png',
+                                    width: 16,
+                                    height: 16,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '4.8',
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              top: 48,
+                              right: 4,
+                              child: Image.asset(
+                                'assets/images/burger.png',
+                                width: size.width * 0.52,
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 25,
+                              left: 28,
+                              child: Container(
+                                width: 105,
+                                height: 36,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  gradient: const RadialGradient(
+                                    center: Alignment(-0.2, -0.6),
+                                    radius: 1.2,
+                                    colors: [
+                                      Color(0xFF908CF5),
+                                      Color(0xFFBB8DE1),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      inset: true,
+                                      color: Color(0xFF9375B6),
+                                      offset: Offset(0, -3),
+                                      blurRadius: 24,
+                                      spreadRadius: 0,
+                                    ),
+                                    BoxShadow(
+                                      inset: true,
+                                      color: Color(0xFFFFACE4),
+                                      offset: Offset(0, 0),
+                                      blurRadius: 15,
+                                      spreadRadius: 0,
+                                    ),
+                                    BoxShadow(
+                                      inset: false,
+                                      color: Color(0x80EA71C5),
+                                      offset: Offset(0, 30),
+                                      blurRadius: 90,
+                                      spreadRadius: 0,
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  'Add to order',
                                   style: GoogleFonts.roboto(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'A 13.99',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
                                     color: Colors.white,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 20,
-                          right: 20,
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                'assets/grafiken/star.png',
-                                width: 16,
-                                height: 16,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                '4.8',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Positioned(
-                          top: 48,
-                          right: 4,
-                          child: Image.asset(
-                            'assets/grafiken/burger.png',
-                            width: size.width * 0.52,
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 20,
-                          left: 28,
-                          child: Container(
-                            width: 105,
-                            height: 36,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              gradient: const RadialGradient(
-                                center: Alignment(-0.2, -0.6),
-                                radius: 1.2,
-                                colors: [Color(0xFF908CF5), Color(0xFFBB8DE1)],
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: const [
-                                // 50% Schwarz = 0x80000000
-                                BoxShadow(
-                                  color: Color(0x80000000),
-                                  offset: Offset(0, 2),
-                                  blurRadius: 8,
-                                ),
-                              ],
-                            ),
-                            child: Text(
-                              'Add to order',
-                              style: GoogleFonts.roboto(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  Text(
-                    'We Recommend',
-                    style: GoogleFonts.inter(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 240,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildRecommendCard(
-                          assetImage: 'assets/grafiken/cupkake_cat.png',
-                          title: 'Mogli’s Cup',
-                          subtitle: 'Strawberry ice cream',
-                          price: 'A 8.99',
-                          likes: 200,
+                      ),
+                      const SizedBox(height: 35),
+                      Text(
+                        'We Recommend',
+                        style: GoogleFonts.inter(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
                         ),
-                        _buildRecommendCard(
-                          assetImage: 'assets/grafiken/icecream.png',
-                          title: 'Balu’s Cup',
-                          subtitle: 'Pistachio ice cream',
-                          price: 'A 8.99',
-                          likes: 165,
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: 265,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            _buildRecommendCard(
+                              assetImage: 'assets/images/cupcake_cat.png',
+                              title: 'Mogli’s Cup',
+                              subtitle: 'Strawberry ice cream',
+                              price: ' 8.99',
+                              likes: 200,
+                            ),
+                            _buildRecommendCard(
+                              assetImage: 'assets/images/icecream.png',
+                              title: 'Balu’s Cup',
+                              subtitle: 'Pistachio ice cream',
+                              price: ' 8.99',
+                              likes: 165,
+                            ),
+                            _buildRecommendCard(
+                              assetImage: 'assets/images/icecream_stick.png',
+                              title: 'Smiling David',
+                              subtitle: 'Coffee ice cream',
+                              price: ' 3.99',
+                              likes: 310,
+                            ),
+                            _buildRecommendCard(
+                              assetImage: 'assets/images/icecream_cone.png',
+                              title: 'Kai in a Cone',
+                              subtitle: 'Vanilla ice cream',
+                              price: ' 3.99',
+                              likes: 290,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

@@ -1,7 +1,7 @@
 // app.dart
 import 'package:flutter/material.dart';
-import 'features/Snack/screens/splash_screen.dart';
-import 'features/Snack/screens/home_screen.dart';
+import 'features/screens/splash_screen.dart';
+import 'features/screens/home_screen.dart';
 
 class SnackApp extends StatelessWidget {
   const SnackApp({super.key});

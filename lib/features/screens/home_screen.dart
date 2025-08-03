@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow_update/flutter_inset_box_shadow_update.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../widgets/snack_overlay.dart';
+import 'snack_overlay.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -217,7 +217,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             _buildCategoryChip('Salty', true),
                             _buildCategoryChip('Sweet', false),
-                            _buildCategoryChip('Fruity', false),
+                            _buildCategoryChip('Drinks', false),
                           ],
                         ),
                       ),

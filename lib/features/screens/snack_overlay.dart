@@ -1,4 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter_inset_box_shadow_update/flutter_inset_box_shadow_update.dart';
+import 'package:gradient_borders/gradient_borders.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SnackOverlay extends StatefulWidget {
@@ -11,9 +14,9 @@ class SnackOverlay extends StatefulWidget {
 }
 
 class _SnackOverlayState extends State<SnackOverlay>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _slideAnimation;
+  late Animation<Offset> _slideAnimation;
   int quantity = 1;
   String selectedSize = "Large";
 
@@ -24,11 +27,17 @@ class _SnackOverlayState extends State<SnackOverlay>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _slideAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero).animate(
+          CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+        );
 
-    _animationController.forward();
+    //_animationController.forward();
+  }
+
+  void startTransition() async {
+    await _animationController.forward();
+    _animationController.reset();
   }
 
   @override
@@ -55,8 +64,8 @@ class _SnackOverlayState extends State<SnackOverlay>
             onTap: _closeOverlay,
             child: Container(
               color: Colors.black.withValues(alpha: 0.6),
-              width: size.width,
-              height: size.height,
+              //width: size.width,
+              //height: size.height,
             ),
           ),
           // Animated overlay container
@@ -64,7 +73,7 @@ class _SnackOverlayState extends State<SnackOverlay>
             animation: _slideAnimation,
             builder: (context, child) {
               return Transform.translate(
-                offset: Offset(0, _slideAnimation.value * size.height * 0.5),
+                offset: Offset(0.0, 0.75),
                 child: Stack(
                   children: [
                     // Gradient background (80% of screen height)
@@ -73,15 +82,14 @@ class _SnackOverlayState extends State<SnackOverlay>
                       left: 0,
                       right: 0,
                       child: Container(
-                        height: size.height * 0.8,
+                        height: size.height * 0.75,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.transparent,
-                              const Color(0xFFC78FFD).withValues(alpha: 0.2),
-                              const Color(0xFFC78FFD).withValues(alpha: 0.8),
+                              const Color(0xFF2F2B22).withValues(alpha: 0.2),
+                              const Color(0xFF437F97).withValues(alpha: 0.4),
                             ],
                           ),
                         ),
@@ -89,7 +97,7 @@ class _SnackOverlayState extends State<SnackOverlay>
                     ),
                     // Cupcake and selection options (layer 2)
                     Positioned(
-                      bottom: 0,
+                      bottom: 80,
                       left: 0,
                       right: 0,
                       child: Column(
@@ -100,7 +108,7 @@ class _SnackOverlayState extends State<SnackOverlay>
                             padding: const EdgeInsets.only(bottom: 200),
                             child: Center(
                               child: Container(
-                                width: 300,
+                                width: 380,
                                 height: 300,
                                 decoration: BoxDecoration(
                                   boxShadow: [
@@ -114,7 +122,6 @@ class _SnackOverlayState extends State<SnackOverlay>
                                   ],
                                 ),
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(150),
                                   child: Image.asset(
                                     'assets/images/cupcake_cat.png',
                                     fit: BoxFit.cover,
@@ -258,12 +265,24 @@ class _SnackOverlayState extends State<SnackOverlay>
                               height: 56,
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
                                   colors: [
-                                    Color(0xFFEA71C5),
-                                    Color(0xFFD946EF),
+                                    Color(0xFFE970C4),
+                                    Color(0xFFF69EA3),
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(28),
+                                border: const GradientBoxBorder(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0x80EA71C5),
+                                      Color(0xFFFFACE4),
+                                    ],
+                                    begin: Alignment.center,
+                                    end: Alignment.center,
+                                  ),
+                                ),
+                                borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
                                     color: const Color(
@@ -297,183 +316,218 @@ class _SnackOverlayState extends State<SnackOverlay>
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: MediaQuery.of(context).padding.bottom + 16,
-                          ),
+                          // SizedBox(
+                          //   height: MediaQuery.of(context).padding.bottom + 16,
+                          // ),
                         ],
                       ),
                     ),
                     // Main content card (layer 3)
                     Positioned(
-                      bottom: 250, // Adjust this value to set the overlap
+                      bottom: 230, // Adjust this value to set the overlap
                       left: 20,
                       right: 20,
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1E1E1E),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.1),
-                            width: 1,
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // Header with title and likes
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 10),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 15,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(
+                                // 10% Weiß = 0x1AFFFFFF
+                                color: const Color(0x1AFFFFFF),
+                                width: 1,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
+                                // Header with title and likes
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Mogli's Cup",
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.inter(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.favorite_border,
+                                            color: Colors.white70,
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            '200',
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white70,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                // Description
                                 Text(
-                                  "Mogli's Cup",
+                                  "Lorem ipsum dolor sit amet consectetur. Non feugiat imperdiet a vel sit at amet. Mi accumsan feugiat magna aliquam feugiat ac et. Pulvinar hendrerit id arcu at sed etiam semper mi hendrerit. Id aliquet quis quam.",
+                                  style: GoogleFonts.roboto(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                    height: 1.5,
+                                    letterSpacing: 0.2,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 16),
+                                // Price
+                                Text(
+                                  "₳ 8.99",
                                   style: GoogleFonts.inter(
-                                    fontSize: 28,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white,
                                   ),
                                 ),
+                                const SizedBox(height: 16),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
+                                  height: 0.5,
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.favorite_border,
-                                        color: Colors.white70,
-                                        size: 18,
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        '200',
-                                        style: GoogleFonts.roboto(
-                                          color: Colors.white70,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            // Description
-                            Text(
-                              "Lorem ipsum dolor sit amet consectetur. Non feugiat imperdiet a vel sit at amet. Mi accumsan feugiat magna aliquam feugiat ac et. Pulvinar hendrerit id arcu at sed etiam semper mi hendrerit. Id aliquet quis quam.",
-                              style: GoogleFonts.roboto(
-                                color: Colors.white70,
-                                fontSize: 14,
-                                height: 1.5,
-                                letterSpacing: 0.2,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 24),
-                            // Price
-                            Text(
-                              "₳ 8.99",
-                              style: GoogleFonts.inter(
-                                fontSize: 32,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            Container(
-                              height: 1,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.white.withValues(alpha: 0.3),
-                                    Colors.transparent,
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            // Ingredients and Reviews
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // Ingredients
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Ingredients",
-                                      style: GoogleFonts.inter(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white70,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Row(
-                                      children: [
-                                        _buildIngredientIcon(
-                                          Icons.eco,
-                                          Colors.green,
-                                        ),
-                                        _buildIngredientIcon(
-                                          Icons.water_drop,
-                                          Colors.blue,
-                                        ),
-                                        _buildIngredientIcon(
-                                          Icons.grain,
-                                          Colors.orange,
-                                        ),
-                                        _buildIngredientIcon(
-                                          Icons.local_fire_department,
-                                          Colors.red,
-                                        ),
+                                    gradient: const LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Color(0xFFFFFFFF),
+                                        Color(0xFFFFFFFF),
                                       ],
                                     ),
-                                  ],
+                                  ),
                                 ),
-                                // Reviews
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                const SizedBox(height: 16),
+                                // Ingredients and Reviews
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      "Reviews",
-                                      style: GoogleFonts.inter(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white70,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Row(
+                                    // Ingredients
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        ...List.generate(
-                                          4,
-                                          (index) => const Icon(
-                                            Icons.star,
-                                            size: 20,
-                                            color: Colors.amber,
-                                          ),
-                                        ),
-                                        const Icon(
-                                          Icons.star_border,
-                                          size: 20,
-                                          color: Colors.white54,
-                                        ),
-                                        const SizedBox(width: 8),
                                         Text(
-                                          "4.0",
-                                          style: GoogleFonts.roboto(
+                                          "Ingredients",
+                                          style: GoogleFonts.inter(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
                                             color: Colors.white70,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
                                           ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            SizedBox(
+                                              width: 18,
+                                              height: 18,
+                                              child: Image.asset(
+                                                'assets/icons/low_fat.png',
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            SizedBox(
+                                              width: 18,
+                                              height: 18,
+                                              child: Image.asset(
+                                                'assets/icons/no_gluten.png',
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            SizedBox(
+                                              width: 18,
+                                              height: 18,
+                                              child: Image.asset(
+                                                'assets/icons/no_sugar.png',
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            SizedBox(
+                                              width: 18,
+                                              height: 18,
+                                              child: Image.asset(
+                                                'assets/icons/kcal.png',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    // Reviews
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "Reviews",
+                                          style: GoogleFonts.inter(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Row(
+                                          children: [
+                                            ...List.generate(
+                                              4,
+                                              (index) => const Icon(
+                                                Icons.star,
+                                                size: 14,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            const Icon(
+                                              Icons.star_border,
+                                              size: 14,
+                                              color: Colors.white54,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              "4.0",
+                                              style: GoogleFonts.roboto(
+                                                color: Colors.white70,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -481,29 +535,9 @@ class _SnackOverlayState extends State<SnackOverlay>
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Close button
-                    Positioned(
-                      top: 40,
-                      right: 40,
-                      child: GestureDetector(
-                        onTap: _closeOverlay,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Icon(
-                            Icons.close,
-                            color: Colors.white70,
-                            size: 24,
                           ),
                         ),
+                        // Close button
                       ),
                     ),
                   ],
@@ -550,22 +584,6 @@ class _SnackOverlayState extends State<SnackOverlay>
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildIngredientIcon(IconData icon, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 12),
-      child: Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.4), width: 1),
-        ),
-        child: Icon(icon, size: 16, color: color),
       ),
     );
   }

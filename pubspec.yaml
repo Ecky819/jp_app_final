@@ -40,7 +40,10 @@ flutter:
 
     - assets/icons/currency.png
     - assets/icons/lunch.png
-
+    - assets/icons/low_fat.png
+    - assets/icons/no_gluten.png
+    - assets/icons/no_sugar.png
+    - assets/icons/kcal.png
   fonts:
     - family: SF Pro
       fonts:

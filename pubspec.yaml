@@ -12,6 +12,7 @@ dependencies:
   flutter_inset_box_shadow: ^1.0.8
   flutter_inset_box_shadow_update: ^0.0.1
   google_fonts: ^6.3.0
+  gradient_borders: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -47,21 +48,5 @@ flutter:
           style: italic
         - asset: assets/fonts/SF-Pro/SF-Pro-Text-Regular.otf
           style: normal
-        - asset: assets/fonts/SF-Pro/SF-Pro-Semibold.otf
+        - asset: assets/fonts/SF-Pro/SF-Pro-Display-Semibold.otf
           style: normal
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf
-          style: normal
-        - asset: assets/fonts/Roboto/Roboto-italic-VariableFont_wdth,wght.ttf
-          style: italic
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/Inter/static/Inter_24pt-Black.ttf
-          weight: 900
-        - asset: assets/fonts/Inter/static/Inter_18pt-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf
-          style: normal
-        - asset: assets/fonts/Inter/Inter-Italic-VariableFont_opsz,wght.ttf
-          style: italic

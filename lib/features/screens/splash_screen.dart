@@ -1,5 +1,6 @@
 import 'dart:ui';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter_inset_box_shadow_update/flutter_inset_box_shadow_update.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -48,7 +49,7 @@ class SplashScreen extends StatelessWidget {
           // 4) Glass-Card exakt Figma-Größe und -Position
           Positioned(
             left: 25,
-            bottom: 78,
+            bottom: 98,
             width: 340,
             height: 208,
             child: ClipRRect(
@@ -117,6 +118,7 @@ class SplashScreen extends StatelessWidget {
                                 end: Alignment.bottomRight,
                                 colors: [Color(0xFFE970C4), Color(0xFFF69EA3)],
                               ),
+
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 // 30% Weiß = 0x4DFFFFFF

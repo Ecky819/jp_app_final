@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow_update/flutter_inset_box_shadow_update.dart';
+import 'package:gradient_borders/gradient_borders.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/snack_overlay.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -66,92 +68,104 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildRecommendCard({
+    required BuildContext context,
     required String assetImage,
     required String title,
     required String subtitle,
     required String price,
     required int likes,
   }) {
-    return Container(
-      width: 200,
-      height: 240,
-      margin: const EdgeInsets.only(right: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [-0.2, 0.61, 1.0],
-          colors: [Color(0x00FFFFFF), Color(0xFF908CF5), Color(0xFF8C5BEA)],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                SnackOverlay(onClose: () => Navigator.pop(context)),
+          ),
+        );
+      },
+      child: Container(
+        width: 200,
+        height: 240,
+        margin: const EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [-0.2, 0.61, 1.0],
+            colors: [Color(0x00FFFFFF), Color(0xFF908CF5), Color(0xFF8C5BEA)],
+          ),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: const Color(0x80FFFFFF), width: 1),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x1AFFFFFF),
+              blurRadius: 24,
+              offset: Offset(0, 8),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0x80FFFFFF), width: 1),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x1AFFFFFF),
-            blurRadius: 24,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Image.asset(
-              assetImage,
-              width: 160,
-              height: 160,
-              fit: BoxFit.contain,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
-          ),
-          Text(
-            subtitle,
-            style: GoogleFonts.roboto(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Colors.white70,
-            ),
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              Image.asset('assets/icons/currency.png', width: 12, height: 12),
-              Text(
-                price,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Image.asset(
+                assetImage,
+                width: 160,
+                height: 160,
+                fit: BoxFit.contain,
               ),
-              const Spacer(),
-              const Icon(
-                Icons.favorite_border,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              subtitle,
+              style: GoogleFonts.roboto(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
                 color: Colors.white70,
-                size: 16,
               ),
-              const SizedBox(width: 4),
-              Text(
-                likes.toString(),
-                style: GoogleFonts.roboto(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white70,
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                Image.asset('assets/icons/currency.png', width: 12, height: 12),
+                Text(
+                  price,
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                const Spacer(),
+                const Icon(
+                  Icons.favorite_border,
+                  color: Colors.white70,
+                  size: 16,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  likes.toString(),
+                  style: GoogleFonts.roboto(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -300,6 +314,7 @@ class HomeScreen extends StatelessWidget {
                                 width: 105,
                                 height: 36,
                                 alignment: Alignment.center,
+
                                 decoration: BoxDecoration(
                                   gradient: const RadialGradient(
                                     center: Alignment(-0.2, -0.6),
@@ -308,6 +323,16 @@ class HomeScreen extends StatelessWidget {
                                       Color(0xFF908CF5),
                                       Color(0xFFBB8DE1),
                                     ],
+                                  ),
+                                  border: const GradientBoxBorder(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0x80EA71C5),
+                                        Color(0xFFFFACE4),
+                                      ],
+                                      begin: Alignment.center,
+                                      end: Alignment.center,
+                                    ),
                                   ),
                                   borderRadius: BorderRadius.circular(8),
                                   boxShadow: const [
@@ -324,6 +349,13 @@ class HomeScreen extends StatelessWidget {
                                       offset: Offset(0, 0),
                                       blurRadius: 15,
                                       spreadRadius: 0,
+                                    ),
+                                    BoxShadow(
+                                      inset: false,
+                                      color: Color(0xFFFFACE4),
+                                      offset: Offset(0, 25),
+                                      blurRadius: 90,
+                                      spreadRadius: 0.0,
                                     ),
                                     BoxShadow(
                                       inset: false,
@@ -363,6 +395,7 @@ class HomeScreen extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           children: [
                             _buildRecommendCard(
+                              context: context,
                               assetImage: 'assets/images/cupcake_cat.png',
                               title: 'Mogli’s Cup',
                               subtitle: 'Strawberry ice cream',
@@ -370,6 +403,7 @@ class HomeScreen extends StatelessWidget {
                               likes: 200,
                             ),
                             _buildRecommendCard(
+                              context: context,
                               assetImage: 'assets/images/icecream.png',
                               title: 'Balu’s Cup',
                               subtitle: 'Pistachio ice cream',
@@ -377,6 +411,7 @@ class HomeScreen extends StatelessWidget {
                               likes: 165,
                             ),
                             _buildRecommendCard(
+                              context: context,
                               assetImage: 'assets/images/icecream_stick.png',
                               title: 'Smiling David',
                               subtitle: 'Coffee ice cream',
@@ -384,6 +419,7 @@ class HomeScreen extends StatelessWidget {
                               likes: 310,
                             ),
                             _buildRecommendCard(
+                              context: context,
                               assetImage: 'assets/images/icecream_cone.png',
                               title: 'Kai in a Cone',
                               subtitle: 'Vanilla ice cream',

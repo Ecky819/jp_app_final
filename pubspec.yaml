@@ -1,7 +1,7 @@
-name: jp_app_final
+name: jp_app
 description: "A new Flutter project."
-publish_to: "none"
-version: 0.1.0
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
 
 environment:
   sdk: ^3.8.1
@@ -9,19 +9,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inset_box_shadow: ^1.0.8
+
+  cupertino_icons: ^1.0.8
+  flutter_svg: ^2.2.0
   flutter_inset_box_shadow_update: ^0.0.1
-  google_fonts: ^6.3.0
   gradient_borders: ^1.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
+  generate: true
   uses-material-design: true
 
+  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/burger.png
     - assets/images/cupcake_chick.png
@@ -29,27 +32,60 @@ flutter:
     - assets/images/icecream_cone.png
     - assets/images/icecream_stick.png
     - assets/images/icecream.png
-    - assets/images/star.png
-
-    - assets/backgrounds/bg_mainscreen.png
-    - assets/backgrounds/bg_startscreen.png
-
-    - assets/details/cut_card.png
-    - assets/details/snack_snack.png
-    - assets/details/cut_card_shiny.png
 
     - assets/icons/currency.png
     - assets/icons/lunch.png
+    - assets/icons/star.png
+    - assets/icons/kcal.png
     - assets/icons/low_fat.png
     - assets/icons/no_gluten.png
     - assets/icons/no_sugar.png
-    - assets/icons/kcal.png
+
+    - assets/backgrounds/bg_mainscreen.png
+    - assets/backgrounds/bg_startscreen.png
+    - assets/backgrounds/bg_splashscreen.png
+
+    - assets/details/cut_card.png
+    - assets/details/cut_card.svg
+    - assets/details/snack_snack.png
+
   fonts:
     - family: SF Pro
       fonts:
         - asset: assets/fonts/SF-Pro/SF-Pro-Italic.ttf
           style: italic
+    - family: SF Pro Text
+      fonts:
         - asset: assets/fonts/SF-Pro/SF-Pro-Text-Regular.otf
           style: normal
-        - asset: assets/fonts/SF-Pro/SF-Pro-Display-Semibold.otf
+        - asset: assets/fonts/SF-Pro/SF-Pro-Text-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/SF-Pro/SF-Pro-Text-Heavy.otf
+          weight: 800
+
+    - family: SF Pro Display
+      fonts:
+        - asset: assets/fonts/SF-Pro/SF-Pro-Display-SemiBold.otf
           style: normal
+        - asset: assets/fonts/SF-Pro/SF-Pro-Display-Bold.otf
+          weight: 700
+
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf
+          style: normal
+        - asset: assets/fonts/Roboto/Roboto-italic-VariableFont_wdth,wght.ttf
+          style: italic
+
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf
+          style: normal
+        - asset: assets/fonts/Inter/Inter-Italic-VariableFont_opsz,wght.ttf
+          style: italic
+    - family: Inter Black
+      fonts:
+        - asset: assets/fonts/Inter/static/Inter_24pt-Black.ttf
+    - family: Inter SemiBold
+      fonts:
+        - asset: assets/fonts/Inter/static/Inter_18pt-SemiBold.ttf
